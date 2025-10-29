@@ -10,11 +10,7 @@ import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const [messages, setMessages] = useState([
-    { id: 1, author: 'Алиса К.', text: 'Привет всем! Кто сделал домашку по математике?', time: '14:23', avatar: 'AK' },
-    { id: 2, author: 'Максим П.', text: 'Я уже сделал! Могу помочь с задачей №5', time: '14:25', avatar: 'МП' },
-    { id: 3, author: 'Лена С.', text: 'Спасибо! У меня как раз проблемы с ней 😅', time: '14:27', avatar: 'ЛС' }
-  ]);
+  const [messages, setMessages] = useState<Array<{id: number; author: string; text: string; time: string; avatar: string}>>([]);
   const [newMessage, setNewMessage] = useState('');
 
   const schedule = [
