@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,16 +35,42 @@ const Index = () => {
     { name: 'Катя В.', phone: '+7 (999) 555-55-55', avatar: 'КВ' }
   ];
 
-  const handleSendMessage = () => {
+  const API_URL = 'https://functions.poehali.dev/322777b6-db8f-47da-a9ad-cd78143292fc';
+
+  useEffect(() => {
+    loadMessages();
+  }, []);
+
+  const loadMessages = async () => {
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setMessages(data.messages || []);
+    } catch (error) {
+      console.error('Ошибка загрузки сообщений:', error);
+    }
+  };
+
+  const handleSendMessage = async () => {
     if (newMessage.trim()) {
-      setMessages([...messages, {
-        id: messages.length + 1,
-        author: 'Ты',
-        text: newMessage,
-        time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
-        avatar: 'Я'
-      }]);
-      setNewMessage('');
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            author: 'Одноклассник',
+            text: newMessage,
+            avatar: 'ОК'
+          })
+        });
+        
+        if (response.ok) {
+          setNewMessage('');
+          await loadMessages();
+        }
+      } catch (error) {
+        console.error('Ошибка отправки сообщения:', error);
+      }
     }
   };
 
